@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<imagination>
+    <entity id="tori.security.collection.provider"
+            class="tori.db.collection.Collection">
+        <param name="database" type="entity">mongodb</param>
+        <param name="document_class" type="class">tori.bundle.security.document.Provider</param>
+    </entity>
+
+    <entity id="tori.security.collection.provider"
+            class="tori.db.collection.Collection">
+        <param name="database" type="entity">mongodb</param>
+        <param name="document_class" type="class">tori.bundle.security.document.Provider</param>
+    </entity>
+</imagination>

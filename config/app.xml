@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<application>
+    <include src="base.xml"/> <!-- include from other configuration files -->
+    <server>
+        <debug>true</debug>
+        <port>8000</port>
+    </server>
+    <routes>
+        <!-- VENDOR/BOOTSTRAP -->
+        <!-- VENDOR/FOUNDATION -->
+        <!-- VENDOR/FOUNDATION-ICON -->
+    </routes>
+    <service>services/common.xml</service>
+    <service>services/collections.xml</service>
+    <service>services/api.xml</service>
+</application>

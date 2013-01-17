@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<imagination>
+    <!-- See the documentation of Imagination at http://shiroyuki.com/work/project-imagination. -->
+    <!--
+    <entity id="css-compressor"
+            class="tori.service.data.compressor.CSSCompressor"
+            tags="resource-service-plugin"
+    />
+    -->
+
+    <entity id="mongodb" class="tori.db.database.Database">
+        <param name="name" type="unicode">core_dev</param>
+    </entity>
+
+    <entity id="session"
+            class="tori.session.repository.xredis.Redis">
+        <param name="prefix" type="str">pint/session</param>
+    </entity>
+
+</imagination>

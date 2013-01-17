@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<application>
+    <server>
+        <!-- Secret salt for secure-cookie feature -->
+        <secret></secret>
+        <!-- Uncomment below to enable custom error controller -->
+        <!-- <error>app.web.controller.ErrorController</error> -->
+    </server>
+    <routes>
+        <!-- Example for routing. See the documentation for more information. -->
+        <!--
+            <controller class="app.web.controller.Home"    pattern="/"/>
+            <controller class="app.web.controller.Session" pattern="/(login|logout|session)"/>
+            <controller class="app.web.interface.Entity"   pattern="/api/v1/entity/(\d+)/([^\s]+)/(\d*)"/>
+        -->
+        <controller class="pint.controller.Home" pattern="/"/>
+        <controller class="pint.controller.Logout" pattern="/logout"/>
+        <controller class="pint.controller.GitHubAuthentication" pattern="/login/github"/>
+    </routes>
+</application>
