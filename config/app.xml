@@ -6,7 +6,10 @@
         <port>8000</port>
     </server>
     <routes>
-        <!-- VENDOR/BOOTSTRAP -->
+        <resource location="resources/css" pattern="/css/(.+)"/>
+        <resource location="resources/js" pattern="/js/(.+)"/>
+        <resource location="resources/image" pattern="/image/(.+)"/>
+        <resource location="resources/vendor/bootstrap" pattern="/v/b/(.+)"/>
         <!-- VENDOR/FOUNDATION -->
         <!-- VENDOR/FOUNDATION-ICON -->
     </routes>

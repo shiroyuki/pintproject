@@ -1,28 +1,41 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>My first Tori app</title>
-<style>body{font-family:'Helvetica','Arial',sans-serif;}</style>
+    <title>My first Tori app</title>
+    <link rel="stylesheet" type="text/css" href="/v/b/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/v/b/css/bootstrap-responsive.min.css"/>
+    <!--<script src="/v/b/js/bootstrap.min.js"></script>-->
 </head>
-<body>
-<h1>It just works!</h1>
-<p>Powered by Tori Framework</p>
+<body class="container container-fluid">
+<div class="row">
+    <div class="span12">
+        <h1>The Pint Project</h1>
 
-{{ app.session('access_token') }}
+        {% if app.session('user') %}
+            {% set user=app.session('user') %}
 
-{% if app.session('user') %}
-    {% set user=app.session('user') %}
+            {% for repo in repositories %}
+                <h2>{{ repo.name }}</h2>
 
-    <table>
-        {% for k in user %}
-            <tr>
-                <td>{{ k }}</td>
-                <td>{{ user[k] }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-    {{ repositories }}
-{% endif %}
+                <p>Updated: {{ repo.last_update }} ago</p>
 
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Language</th>
+                        <th>Releasable</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ repo.language }}</td>
+                        <td>{{ 'Yes' if repo.releasable else 'No' }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
 </body>
 </html>

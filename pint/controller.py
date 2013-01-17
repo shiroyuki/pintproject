@@ -2,6 +2,7 @@
 from tori.controller           import Controller
 from tori.decorator.controller import renderer
 from tornado.web import asynchronous
+from pint.api.github import RequestDeniedError
 
 from pint.mixin import GitHubMixin
 
@@ -10,13 +11,14 @@ class Home(Controller):
     def get(self):
         contexts = {}
 
-        github_api = self.component('api.github')
+        github_api   = self.component('api.github')
+        access_token = self.session.get('access_token')
 
         if self.session.get('user'):
-            contexts['repositories'] = github_api.do(
-                '/user/repos',
-                self.session.get('access_token')
-            )
+            try:
+                contexts['repositories'] = github_api.repositories(access_token)
+            except RequestDeniedError as exception:
+                pass
 
         self.render('index.html', **contexts)
 

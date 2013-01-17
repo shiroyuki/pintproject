@@ -2,8 +2,74 @@
 import codecs
 import json
 import http
+import math
 import re
 import urllib.parse # Python 3.3
+import time
+
+class RequestDeniedError(Exception): pass
+
+class ImmutableData(object):
+    def __init__(self, **kwargs):
+        for name in kwargs:
+            object.__setattr__(self, name, kwargs[name])
+
+    def __setattr__(self, key, value):
+        raise NotImplemented('Disabled')
+
+    def __delattr__(self, item):
+        raise NotImplemented('Disabled')
+
+class Repository(object):
+    __accepted_keys__   = ['name', 'language', 'clone_url', 'id', 'updated_at', 'tags_url', 'private', 'fork']
+    __unit_map__        = [
+        ('second', 1),
+        ('minute', 60),
+        ('hour',   60),
+        ('day',    24)
+    ]
+
+    def __init__(self, **kwargs):
+        property_map = {
+            'tags': {}
+        }
+
+        for key in self.__accepted_keys__:
+            property_map[key] = kwargs[key]
+
+        ImmutableData.__init__(self, **property_map)
+
+    @property
+    def time_difference(self):
+        last_update = time.mktime(time.strptime(self.updated_at, '%Y-%m-%dT%H:%M:%SZ'))
+        current     = time.mktime(time.gmtime())
+
+        return math.floor(current - last_update)
+
+    @property
+    def last_update(self):
+        time_difference = self.time_difference
+
+        unit_name = None
+
+        print(self.name)
+
+        for name, divider in self.__unit_map__:
+            diff = math.floor(time_difference / divider)
+
+            print('{} in {}'.format(diff, name))
+
+            if diff < 1:
+                break
+
+            time_difference = diff
+            unit_name       = name
+
+        return '{} {}{}'.format(time_difference, unit_name, '' if time_difference == 1 else 's')
+
+    @property
+    def releasable(self):
+        return not self.fork and not self.private
 
 class GitHub(object):
     _default_headers = {'Accept': 'application/json'}
@@ -23,7 +89,7 @@ class GitHub(object):
     def secret(self):
         return self._secret
 
-    def _use_error_callback(callback, response, decoded_body):
+    def _use_error_callback(self, callback, response, decoded_body):
         if not callback:
             return
 
@@ -35,9 +101,9 @@ class GitHub(object):
         if response.error:
             data['error'] = response.error
 
-        error_callback(**data)
+        callback(**data)
 
-    def _decode_response_body(response):
+    def _decode_response_body(self, responseBody):
         """ Decodes the JSON-format response body
 
         :param response: the response object
@@ -46,15 +112,21 @@ class GitHub(object):
         :return: the decoded data
         """
         # Fix GitHub response.
-        body = codecs.decode(response.body, 'ascii')
+        body = codecs.decode(responseBody, 'ascii')
         body = re.sub('"', '\"', body)
         body = re.sub("'", '"', body)
         body = json.loads(body)
 
-        if response.error:
-            return None
-
         return body
+
+    def repositories(self, token):
+        repositories      = []
+        raw_reponsitories = self.do('/user/repos', token)
+
+        for raw_reponsitory in raw_reponsitories:
+            repositories.append(Repository(**raw_reponsitory))
+
+        return repositories
 
     def do(self, uri, token, method='GET', params={}):
         payload = urllib.parse.urlencode(params)
@@ -66,11 +138,18 @@ class GitHub(object):
             'body':    payload
         }
 
-        self._http.request(**arguments)
+        try:
+            self._http.request(**arguments)
+        except http.client.BadStatusLine:
+            raise RequestDeniedError()
+        except http.client.CannotSendRequest:
+            raise RequestDeniedError()
 
         response = self._http.getresponse()
 
-        return response.read()
+        body = self._decode_response_body(response.read())
+
+        return body
 
 
 
