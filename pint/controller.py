@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from tori.controller           import Controller
-from tori.decorator.controller import renderer
+from tori.decorator.controller  import renderer
+from tori.bundle.common.handler import Controller
 from tornado.web import asynchronous
 from pint.api.github import RequestDeniedError
 
@@ -42,7 +42,7 @@ class GitHubAuthentication(Controller, GitHubMixin):
     @asynchronous
     def get(self):
         params = {
-            'redirect_uri': 'http://pintproject.org:8000/login/github',
+            'redirect_uri': '',
             'client_id':    self.client_id,
             'state':        self.xsite_token
         }

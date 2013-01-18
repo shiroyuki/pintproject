@@ -4,12 +4,21 @@
     <title>My first Tori app</title>
     <link rel="stylesheet" type="text/css" href="/v/b/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="/v/b/css/bootstrap-responsive.min.css"/>
-    <!--<script src="/v/b/js/bootstrap.min.js"></script>-->
+    <script src="http://code.jquery.com/jquery-2.0.0b1.js"></script>
+    <script src="/v/b/js/bootstrap.min.js"></script>
 </head>
 <body class="container container-fluid">
 <div class="row">
     <div class="span12">
-        <h1>The Pint Project</h1>
+        <header>
+            <span>The Pint Project</span>
+
+            {% if core.user %}
+                <a href="/logout">Sign out</a>
+            {% else %}
+                <a href="/login">Sign in</a>
+            {% endif %}
+        </header>
 
         {% if app.session('user') %}
             {% set user=app.session('user') %}
@@ -17,7 +26,9 @@
             {% for repo in repositories %}
                 <h2>{{ repo.name }}</h2>
 
-                <p>Updated: {{ repo.last_update }} ago</p>
+                <p>Since {{ repo.age }} ago</p>
+
+                <p>Updated {{ repo.last_update }} ago</p>
 
                 <table class="table">
                     <thead>

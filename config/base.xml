@@ -15,6 +15,6 @@
         -->
         <controller class="pint.controller.Home" pattern="/"/>
         <controller class="pint.controller.Logout" pattern="/logout"/>
-        <controller class="pint.controller.GitHubAuthentication" pattern="/login/github"/>
+        <controller class="pint.controller.GitHubAuthentication" pattern="/login"/>
     </routes>
 </application>

@@ -7,65 +7,39 @@ import re
 import urllib.parse # Python 3.3
 import time
 
+from tori.db.document import BaseDocument
+from pint.util import TimeLength
+
 class RequestDeniedError(Exception): pass
 
-class ImmutableData(object):
-    def __init__(self, **kwargs):
-        for name in kwargs:
-            object.__setattr__(self, name, kwargs[name])
-
-    def __setattr__(self, key, value):
-        raise NotImplemented('Disabled')
-
-    def __delattr__(self, item):
-        raise NotImplemented('Disabled')
-
-class Repository(object):
-    __accepted_keys__   = ['name', 'language', 'clone_url', 'id', 'updated_at', 'tags_url', 'private', 'fork']
-    __unit_map__        = [
-        ('second', 1),
-        ('minute', 60),
-        ('hour',   60),
-        ('day',    24)
-    ]
+class Repository(BaseDocument):
+    __accepted_keys__ = ['name', 'language', 'clone_url', 'id', 'created_at', 'updated_at', 'tags_url', 'private', 'fork']
 
     def __init__(self, **kwargs):
         property_map = {
-            'tags': {}
+            'tags': {},
+            '_last_update': None,
+            '_age': None
         }
 
         for key in self.__accepted_keys__:
             property_map[key] = kwargs[key]
 
-        ImmutableData.__init__(self, **property_map)
+        super(Repository, self).__init__(**property_map)
 
     @property
-    def time_difference(self):
-        last_update = time.mktime(time.strptime(self.updated_at, '%Y-%m-%dT%H:%M:%SZ'))
-        current     = time.mktime(time.gmtime())
+    def age(self):
+        if not self._age:
+            self._age = TimeLength(self.created_at)
 
-        return math.floor(current - last_update)
+        return self._age
 
     @property
     def last_update(self):
-        time_difference = self.time_difference
+        if not self._last_update:
+            self._last_update = TimeLength(self.updated_at)
 
-        unit_name = None
-
-        print(self.name)
-
-        for name, divider in self.__unit_map__:
-            diff = math.floor(time_difference / divider)
-
-            print('{} in {}'.format(diff, name))
-
-            if diff < 1:
-                break
-
-            time_difference = diff
-            unit_name       = name
-
-        return '{} {}{}'.format(time_difference, unit_name, '' if time_difference == 1 else 's')
+        return self._last_update
 
     @property
     def releasable(self):
