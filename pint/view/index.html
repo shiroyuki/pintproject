@@ -4,6 +4,9 @@
     <title>My first Tori app</title>
     <link rel="stylesheet" type="text/css" href="/v/b/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="/v/b/css/bootstrap-responsive.min.css"/>
+    <style>
+        
+    </style>
     <script src="http://code.jquery.com/jquery-2.0.0b1.js"></script>
     <script src="/v/b/js/bootstrap.min.js"></script>
 </head>
@@ -19,33 +22,34 @@
                 <a href="/login">Sign in</a>
             {% endif %}
         </header>
+        <section class="project-list">
+            {% if app.session('user') %}
+                {% set user=app.session('user') %}
+:
+                {% for repo in repositories %}
+                    <h2>{{ repo.name }}</h2>
 
-        {% if app.session('user') %}
-            {% set user=app.session('user') %}
+                    <p>Since {{ repo.age }} ago</p>
 
-            {% for repo in repositories %}
-                <h2>{{ repo.name }}</h2>
+                    <p>Updated {{ repo.last_update }} ago</p>
 
-                <p>Since {{ repo.age }} ago</p>
-
-                <p>Updated {{ repo.last_update }} ago</p>
-
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>Language</th>
-                        <th>Releasable</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>{{ repo.language }}</td>
-                        <td>{{ 'Yes' if repo.releasable else 'No' }}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            {% endfor %}
-        {% endif %}
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Language</th>
+                            <th>Releasable</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{{ repo.language }}</td>
+                            <td>{{ 'Yes' if repo.releasable else 'No' }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                {% endfor %}
+            {% endif %}
+        </section>
     </div>
 </div>
 </body>

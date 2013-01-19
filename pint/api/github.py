@@ -114,12 +114,13 @@ class GitHub(object):
 
         try:
             self._http.request(**arguments)
-        except http.client.BadStatusLine:
-            raise RequestDeniedError()
         except http.client.CannotSendRequest:
             raise RequestDeniedError()
 
-        response = self._http.getresponse()
+        try:
+            response = self._http.getresponse()
+        except http.client.BadStatusLine:
+            return None
 
         body = self._decode_response_body(response.read())
 
