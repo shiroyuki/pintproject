@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <imagination>
     <entity id="api.github"
-            class="pint.api.github.GitHub">
+            class="pint.api.github.RestAPI">
         <param name="cid" type="str">e30ab2c602e8db55f85a</param>
         <param name="secret" type="str">e98e006bffb8c775a03eadeabb16951d36830613</param>
     </entity>

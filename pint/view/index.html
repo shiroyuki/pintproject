@@ -1,56 +1,17 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <title>My first Tori app</title>
-    <link rel="stylesheet" type="text/css" href="/v/b/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="/v/b/css/bootstrap-responsive.min.css"/>
-    <style>
-        
-    </style>
-    <script src="http://code.jquery.com/jquery-2.0.0b1.js"></script>
-    <script src="/v/b/js/bootstrap.min.js"></script>
-</head>
-<body class="container container-fluid">
-<div class="row">
-    <div class="span12">
-        <header>
-            <span>The Pint Project</span>
-
-            {% if core.user %}
-                <a href="/logout">Sign out</a>
-            {% else %}
-                <a href="/login">Sign in</a>
-            {% endif %}
-        </header>
+{% extends 'base.html' %}
+{% block body %}
+    {% if core.user %}
         <section class="project-list">
-            {% if app.session('user') %}
-                {% set user=app.session('user') %}
-:
+            <ul>
                 {% for repo in repositories %}
-                    <h2>{{ repo.name }}</h2>
-
-                    <p>Since {{ repo.age }} ago</p>
-
-                    <p>Updated {{ repo.last_update }} ago</p>
-
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Language</th>
-                            <th>Releasable</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>{{ repo.language }}</td>
-                            <td>{{ 'Yes' if repo.releasable else 'No' }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <li>
+                        <a href="/{{ repo.owner.login}}/{{ repo.name }}">{{ repo.name }}</a>
+                    </li>
                 {% endfor %}
-            {% endif %}
+            </ul>
         </section>
-    </div>
-</div>
-</body>
-</html>
+    {% else %}
+        <h1>Not authenticated</h1>
+        <p><a class="btn">Login with GitHub Account</a></p>
+    {% endif %}
+{% endblock %}

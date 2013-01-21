@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block body %}
+    <h1>{{ repository.name }}</h1>
+    <p>{{ repository.age }} old</p>
+    <p>{{ repository.last_update }} ago</p>
+
+    <h2>Releases</h2>
+    {% set tags = repository.tags %}
+    {% if tags %}
+        <ul>
+            {% for tag in tags %}
+                <li>{{ tag.name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No release available</p>
+    {% endif %}
+
+    <h2>Snapshots</h2>
+    {% set branches = repository.branches %}
+    {% if branches %}
+        <ul>
+            {% for branch in branches %}
+                <li><a href="{{ repository.page_url }}/snapshot/{{ repository.name }}-{{ branch.name }}.tar.gz">{{ branch.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No snapshot available</p>
+    {% endif %}
+{% endblock %}

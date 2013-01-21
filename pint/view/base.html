@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>My first Tori app</title>
+    <link rel="stylesheet" type="text/css" href="/v/b/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/v/b/css/bootstrap-responsive.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/page/index.css"/>
+    <script src="http://code.jquery.com/jquery-2.0.0b1.js"></script>
+    <script src="/v/b/js/bootstrap.min.js"></script>
+</head>
+<body class="container container-fluid">
+<div class="row">
+    <div class="span12">
+        <header>
+            <span>The Pint Project</span>
+
+            {% if core.user %}
+                <span>{{ core.user.name }}</span>
+                <a href="/logout">Sign out</a>
+            {% else %}
+                <a href="/login">Sign in</a>
+            {% endif %}
+        </header>
+        {% block body %}{% endblock %}
+    </div>
+</div>
+</body>
+</html>
