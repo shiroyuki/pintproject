@@ -9,7 +9,7 @@
     {% if tags %}
         <ul>
             {% for tag in tags %}
-                <li>{{ tag.name }}</li>
+                <li><a href="{{ tag.tarball_url }}">{{ tag.name }}</a></li>
             {% endfor %}
         </ul>
     {% else %}
