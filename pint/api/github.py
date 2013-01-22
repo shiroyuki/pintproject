@@ -257,7 +257,7 @@ class RestAPI(object):
         try:
             self._http.request(**arguments)
         except http.client.CannotSendRequest:
-            raise RequestDeniedError()
+            raise RequestDeniedError(uri)
 
         try:
             response = self._http.getresponse()
